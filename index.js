@@ -114,3 +114,102 @@ function gameObject() {
         },
     };
 }
+
+// Retrieving player information
+/* This function takes the player's name as an argument and
+ returns the number of points scored by that player in the game.*/
+function numPointsScored(playerName) {
+    const game = gameObject();
+    for (const team of Object.values(game)) {
+        if (team.players[playerName]) {
+            return team.players[playerName].points;
+        }
+    }
+    return 0; // Return 0 if player not found
+}
+
+module.exports = { gameObject, numPointsScored };
+
+function shoeSize(playerName) {
+    const game = gameObject();
+    for (const team of Object.values(game)) {
+        if (team.players[playerName]) {
+            return team.players[playerName].shoe;
+        }
+    }
+    return 0; // Return 0 if player not found
+}
+/* This function takes the team name as an argument and
+ returns an array of that team's colors.*/
+
+function teamColors(teamName) {
+    const game = gameObject();
+    for (const team of Object.values(game)) {
+        if (team.teamName === teamName) {
+            return team.colors;
+        }
+    }
+    return []; // Return empty array if team not found
+}
+
+module.exports = { gameObject, numPointsScored, shoeSize, teamColors };
+
+// Function to retrieve team names
+function teamNames() {
+    const game = gameObject();
+    const name = [];
+    Object.values(game).forEach(team => {
+        name.push(team.teamName);
+    }); 
+    return name;
+}
+
+// Function to return player numbers for a given team
+function playerNumbers(teamName) {
+    const game = gameObject();
+    const numbers = [];
+    for (const team of Object.values(game)) {
+        if (team.teamName === teamName) {
+            for (const player of Object.values(team.players)) {
+                numbers.push(player.number);
+            }
+        }
+    }
+    return numbers;
+}
+
+module.exports = { gameObject, numPointsScored, shoeSize, teamColors, teamNames, playerNumbers };
+
+// Function to retrieve player stats
+function playerStats(playerName) {
+    const game = gameObject();
+    for (const team of Object.values(game)) {
+        if (team.players[playerName]) {
+            return team.players[playerName];
+        }
+    }
+    return {}; // Return empty object if player not found
+}
+
+module.exports = { gameObject, numPointsScored, shoeSize, 
+    teamColors, teamNames, playerNumbers, playerStats };
+
+// Function to find rebounds of player with largest shoe size
+function bigShoeRebounds() {
+    const game = gameObject();
+    let largestShoeSize = 0;
+    let rebounds = 0;
+
+    for (const team of Object.values(game)) {
+        for (const [playerName, stats] of Object.entries(team.players)) {
+            if (stats.shoe > largestShoeSize) {
+                largestShoeSize = stats.shoe;
+                rebounds = stats.rebounds;
+            }
+        }
+    }
+    return rebounds;
+}
+
+module.exports = { gameObject, numPointsScored, shoeSize, teamColors, 
+    teamNames, playerNumbers, playerStats, bigShoeRebounds };
