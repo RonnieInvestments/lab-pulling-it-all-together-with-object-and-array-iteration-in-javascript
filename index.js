@@ -118,81 +118,111 @@ function gameObject() {
 // Retrieving player information
 /* This function takes the player's name as an argument and
  returns the number of points scored by that player in the game.*/
+
 function numPointsScored(playerName) {
-    const game = gameObject();
-    for (const team of Object.values(game)) {
-        if (team.players[playerName]) {
-            return team.players[playerName].points;
-        }
+    const game = gameObject(); // Expression
+    const homePlayers = game.home.players; // Object home
+    const awayPlayers = game.away.players; // Object away
+
+    const homePlayer = homePlayers[playerName];
+    const awayPlayer = awayPlayers[playerName];
+
+    // use the if condition
+    if (homePlayer) {
+        return homePlayer.points;
     }
-    return 0; // Return 0 if player not found
+    if (awayPlayer) {
+        return awayPlayer.points;
+    }
 }
 
-module.exports = { gameObject, numPointsScored };
+// Retrieving the shoe size
 
 function shoeSize(playerName) {
-    const game = gameObject();
-    for (const team of Object.values(game)) {
-        if (team.players[playerName]) {
-            return team.players[playerName].shoe;
-        }
+    const game = gameObject(); //expression
+    const homePlayers = game.home.players; //Object
+    const awayPlayers = game.away.players; //Object home
+
+    const homePlayer = homePlayers[playerName]; //playerObjet or undefined
+    const awayPlayer = awayPlayers[playerName];
+    
+    if (homePlayer) {
+    return homePlayer.shoe;
     }
-    return 0; // Return 0 if player not found
+    if (awayPlayer) {
+    return awayPlayer.shoe;
+    }
 }
-/* This function takes the team name as an argument and
- returns an array of that team's colors.*/
+
+/* 
+- Retrieving team colors
+This function takes the team name as an argument and
+returns an array of that team's colors.*/
 
 function teamColors(teamName) {
     const game = gameObject();
-    for (const team of Object.values(game)) {
-        if (team.teamName === teamName) {
-            return team.colors;
-        }
-    }
-    return []; // Return empty array if team not found
-}
+    const home = game.home;
+    const away = game.away;
 
-module.exports = { gameObject, numPointsScored, shoeSize, teamColors };
+    if (home.teamName === teamName) {
+        return home.colors;
+    }
+    if (away.teamName === teamName) {
+        return away.colors;
+    }
+}
 
 // Function to retrieve team names
 function teamNames() {
     const game = gameObject();
-    const name = [];
-    Object.values(game).forEach(team => {
-        name.push(team.teamName);
-    }); 
-    return name;
+    const home = game.home;
+    const away = game.away;
+
+    return [home.teamName, away.teamName];
 }
 
 // Function to return player numbers for a given team
 function playerNumbers(teamName) {
     const game = gameObject();
-    const numbers = [];
-    for (const team of Object.values(game)) {
-        if (team.teamName === teamName) {
-            for (const player of Object.values(team.players)) {
-                numbers.push(player.number);
-            }
-        }
+    const home = game.home;
+    const away = game.away;
+
+    let players;
+    let playerKeys = [];
+    let jerseyNumbers = [];
+
+    if (home.teamName === teamName) {
+        players = home.players;
+        playerKeys = Object.keys(players); // ["Alan Anderson", "Reggie Evens",...]
     }
-    return numbers;
+    if (away.teamName === teamName) {
+        players = away.players;
+        playerKeys = Object.keys(players); // ["Charlotte Hornets", "Bismack Biyombo",...]
+    }
+    
+    for (let i = 0; i < playerKeys.length; i++) {
+        let playerKey = playerKeys[i]; // Alan Anderson, Reggie Evens
+        let playerObj = players[playerKey]; // {number:0, shoe:16,...}
+        let jerseyNumber = playerObj.number;
+        jerseyNumbers.push(jerseyNumber);
+    }
+    return jerseyNumbers;
 }
 
-module.exports = { gameObject, numPointsScored, shoeSize, teamColors, teamNames, playerNumbers };
 
 // Function to retrieve player stats
 function playerStats(playerName) {
     const game = gameObject();
-    for (const team of Object.values(game)) {
-        if (team.players[playerName]) {
-            return team.players[playerName];
-        }
-    }
-    return {}; // Return empty object if player not found
-}
+    const home = game.home;
+    const away = game.away;
 
-module.exports = { gameObject, numPointsScored, shoeSize, 
-    teamColors, teamNames, playerNumbers, playerStats };
+    if (home.players[playerName]) {
+        return home.players[playerName];
+    }
+    if (away.players[playerName]) {
+        return away.players[playerName];
+    }
+}
 
 // Function to find rebounds of player with largest shoe size
 function bigShoeRebounds() {
@@ -210,6 +240,3 @@ function bigShoeRebounds() {
     }
     return rebounds;
 }
-
-module.exports = { gameObject, numPointsScored, shoeSize, teamColors, 
-    teamNames, playerNumbers, playerStats, bigShoeRebounds };
